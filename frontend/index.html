@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f0f0f0;
+    }
+    h2 {
+      color: #333;
+    }
+    input {
+      padding: 8px;
+      width: 200px;
+      margin-right: 8px;
+    }
+    button {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+    li {
+      background: #fff;
+      margin-bottom: 8px;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    li button {
+      background: #ff4c4c;
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Todo App</h2>
+
+<input id="task" placeholder="Enter a task">
+<button onclick="addTask()">Add</button>
+
+<ul id="list"></ul>
+
+<script>
+const API = "https://be-todo.onrender.com/tasks";
+const list = document.getElementById("list");
+const taskInput = document.getElementById("task");
+
+// Load tasks from API
+function load() {
+  fetch(API)
+    .then(r => r.json())
+    .then(data => {
+      list.innerHTML = "";
+      data.forEach(t => {
+        list.innerHTML += `
+          <li>
+            ${t.name} 
+            <button onclick="del('${t._id}')">X</button>
+          </li>
+        `;
+      });
+    })
+    .catch(err => console.error("Error loading tasks:", err));
+}
+
+// Add new task
+function addTask() {
+  const taskName = taskInput.value.trim();
+  if (!taskName) return alert("Please enter a task");
+
+  fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: taskName })
+  })
+  .then(() => {
+    taskInput.value = "";
+    load();
+  })
+  .catch(err => console.error("Error adding task:", err));
+}
+
+// Delete task
+function del(id) {
+  fetch(`${API}/${id}`, { method: "DELETE" })
+    .then(load)
+    .catch(err => console.error("Error deleting task:", err));
+}
+
+// Initial load
+load();
+</script>
+
+</body>
+</html>
