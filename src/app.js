@@ -6,8 +6,7 @@ const app = express();
 app.use(express.json());
 
 // Path to our todos data file
-const todosFilePath = path.join(__dirname, '../data/todos.json');
-
+const todosFilePath = path.join('/tmp', 'todos.json');
 // Helper function to read todos from file
 function readTodos() {
     try {
