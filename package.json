@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A simple todo list API",
   "main": "src/server.js",
+  "engines": {
+    "node": "22.21.0"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
